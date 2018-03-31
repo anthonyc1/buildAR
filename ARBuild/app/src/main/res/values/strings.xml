@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">ARBuild</string>
+    <string name="scan_barcode">Scan Barcode</string>
+</resources>
