@@ -3,9 +3,8 @@ package com.endercrest.arbuild;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
@@ -15,7 +14,6 @@ import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.params.StreamConfigurationMap;
-import android.media.ImageReader;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
@@ -36,7 +34,8 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 import java.util.Arrays;
 
 public class BarcodeActivity extends AppCompatActivity {
-    private static final String TAG = "AndroidCameraApi";
+    public static final String BARCODE = "com.endercrest.arbuild.BARCODE";
+    private static final String TAG = BarcodeActivity.class.getSimpleName();
 
     private TextureView cameraView;
 
@@ -45,13 +44,13 @@ public class BarcodeActivity extends AppCompatActivity {
     protected CameraCaptureSession cameraCaptureSessions;
     protected CaptureRequest.Builder captureRequestBuilder;
     private Size imageDimension;
-    private ImageReader imageReader;
     private static final int REQUEST_CAMERA_PERMISSION = 200;
     private Handler mBackgroundHandler;
     private HandlerThread mBackgroundThread;
 
     private BarcodeDetector detector;
     private boolean barcodeFound = false;
+    private boolean loadingAR = false;
     private Barcode barcode;
     private int barCodeThreads;
 
@@ -89,12 +88,9 @@ public class BarcodeActivity extends AppCompatActivity {
         }
         @Override
         public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-            if(barcodeFound || barCodeThreads > 2) {
-                System.out.println(barcodeFound + "   " + barCodeThreads);
+            if(barcodeFound || barCodeThreads > 0) {
                 return;
             }
-
-            System.out.println("Running Scan!!");
 
             new Thread(new Runnable() {
                 public void run() {
@@ -102,10 +98,20 @@ public class BarcodeActivity extends AppCompatActivity {
                     Frame frame = new Frame.Builder().setBitmap(cameraView.getBitmap()).build();
                     SparseArray<Barcode> barcodes = detector.detect(frame);
 
-                    if(barcodes.size() > 0) {
+                    if(barcodes.size() > 0 && !loadingAR) {
+                        System.out.println("Loading AR");
+                        loadingAR = true;
                         barcodeFound = true;
                         barcode = barcodes.valueAt(0);
-                        System.out.println("BARCODE FOUND!!!" + barcode.rawValue);
+
+
+                        Intent intent = new Intent(getBaseContext(), ARStepActivity.class);
+                        intent.putExtra(BARCODE, barcode.rawValue);
+                        startActivity(intent);
+
+                        barcodeFound = false;
+                        barcode = null;
+                        loadingAR = false;
                     }
                     barCodeThreads--;
                 }
