@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 import okhttp3.Call;
@@ -56,14 +58,27 @@ public class Test  extends AppCompatActivity {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
 
+                // This the the text obtained from GET request
                 final String myResponse = response.body().string();
+                final String name, obj_link, img_link, texture_link;
 
-                Test.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        myText.setText(myResponse);
-                    }
-                });
+                // Convert obtained text to JSON object
+                try {
+                    JSONObject jsonObject = new JSONObject(myResponse);
+                    name = jsonObject.getString("name");
+                    obj_link = jsonObject.getString("obj_link");
+                    img_link = jsonObject.getString("img_link");
+                    texture_link = jsonObject.getString("texture_link");
+
+                    Test.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            myText.setText(name);
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
             }
         });
