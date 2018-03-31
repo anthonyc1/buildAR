@@ -17,7 +17,11 @@ import okhttp3.Callback;
 public class Test  extends AppCompatActivity {
 
     String barcode = "0";
-    public String url = "https://jeffzh4ng.lib.id/furniture@dev/get-furniture/?id=";
+    String getreq_url = "https://jeffzh4ng.lib.id/furniture@dev/get-furniture/?id=";
+
+    String file_url = "http://endercrest.com/hackprinceton/";
+    String obj_ext = "andy.obj";
+    String png_ext = "andy.png";
 
     OkHttpClient client = new OkHttpClient();
     TextView myText;
@@ -25,26 +29,27 @@ public class Test  extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        myText = (TextView)findViewById(R.id.myText);
+        myText = (TextView) findViewById(R.id.myText);
 
-        getRequest(barcode);
+        //getRequest(getreq_url, barcode);
+        getRequest(file_url, obj_ext);
     }
 
     // Call this method
-    void getRequest(String barcode){
+    void getRequest(String url, String ext) {
         try {
-            run(barcode);
-        } catch (Exception e){
+            run(url, ext);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    void run(String barcode) throws IOException {
+    void run(String url, String ext) throws IOException {
 
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
-                .url(url+barcode)
+                .url(url + ext)
                 .build();
 
         client.newCall(request).enqueue(new Callback() {
@@ -55,33 +60,52 @@ public class Test  extends AppCompatActivity {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-
-                // This the the text obtained from GET request
-                final String myResponse = response.body().string();
-                final String name, obj_link, img_link, texture_link;
-
-                // Convert obtained text to JSON object
-                try {
-                    JSONObject jsonObject = new JSONObject(myResponse);
-
-                    // Values
-                    name = jsonObject.getString("name");
-                    obj_link = jsonObject.getString("obj_link");
-                    img_link = jsonObject.getString("img_link");
-                    texture_link = jsonObject.getString("texture_link");
-
-                    // Output to activity
-                    Test.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            myText.setText(name);
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
+                func2(response);
             }
         });
     }
+
+    void func1(Response response) {
+        // Convert obtained text to JSON object
+        try {
+            // This the the text obtained from GET request
+            final String myResponse = response.body().string();
+            final String name, obj_link, img_link, texture_link;
+
+            JSONObject jsonObject = new JSONObject(myResponse);
+
+            // Values
+            name = jsonObject.getString("name");
+            obj_link = jsonObject.getString("obj_link");
+            img_link = jsonObject.getString("img_link");
+            texture_link = jsonObject.getString("texture_link");
+
+            // Output to activity
+            Test.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    myText.setText(name);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    void func2(Response response) {
+        // Convert obtained text to JSON object
+        try {
+            final String myResponse = response.body().string();
+            // Output to activity
+            Test.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    myText.setText(myResponse);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
+
