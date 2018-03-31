@@ -16,37 +16,35 @@ import okhttp3.Callback;
 
 public class Test  extends AppCompatActivity {
 
+    String barcode = "0";
+    public String url = "https://jeffzh4ng.lib.id/furniture@dev/get-furniture/?id=";
+
     OkHttpClient client = new OkHttpClient();
-    public String url = "https://jeffzh4ng.lib.id/furniture@dev/get-furniture/?id=0";
     TextView myText;
-
-    String run(String url) throws IOException {
-        Request request = new Request.Builder()
-                .url(url)
-                .build();
-
-        Response response = client.newCall(request).execute();
-        return response.body().string();
-    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         myText = (TextView)findViewById(R.id.myText);
 
+        getRequest(barcode);
+    }
+
+    // Call this method
+    void getRequest(String barcode){
         try {
-            run();
+            run(barcode);
         } catch (Exception e){
             e.printStackTrace();
         }
     }
 
-    void run() throws IOException {
+    void run(String barcode) throws IOException {
 
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
-                .url(url)
+                .url(url+barcode)
                 .build();
 
         client.newCall(request).enqueue(new Callback() {
@@ -65,11 +63,14 @@ public class Test  extends AppCompatActivity {
                 // Convert obtained text to JSON object
                 try {
                     JSONObject jsonObject = new JSONObject(myResponse);
+
+                    // Values
                     name = jsonObject.getString("name");
                     obj_link = jsonObject.getString("obj_link");
                     img_link = jsonObject.getString("img_link");
                     texture_link = jsonObject.getString("texture_link");
 
+                    // Output to activity
                     Test.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
