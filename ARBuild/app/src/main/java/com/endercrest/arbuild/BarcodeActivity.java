@@ -4,6 +4,8 @@ package com.endercrest.arbuild;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
@@ -12,7 +14,6 @@ import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
-import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.ImageReader;
 import android.os.Handler;
@@ -23,11 +24,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Size;
+import android.util.SparseArray;
 import android.view.Surface;
 import android.view.TextureView;
 import android.widget.Toast;
 
-import java.io.File;
+import com.google.android.gms.vision.Frame;
+import com.google.android.gms.vision.barcode.Barcode;
+import com.google.android.gms.vision.barcode.BarcodeDetector;
+
 import java.util.Arrays;
 
 public class BarcodeActivity extends AppCompatActivity {
@@ -45,6 +50,11 @@ public class BarcodeActivity extends AppCompatActivity {
     private Handler mBackgroundHandler;
     private HandlerThread mBackgroundThread;
 
+    private BarcodeDetector detector;
+    private boolean barcodeFound = false;
+    private Barcode barcode;
+    private int barCodeThreads;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +63,14 @@ public class BarcodeActivity extends AppCompatActivity {
         cameraView = findViewById(R.id.cameraView);
         assert cameraView != null;
         cameraView.setSurfaceTextureListener(textureListener);
+
+        detector = new BarcodeDetector.Builder(getApplicationContext())
+                .setBarcodeFormats(Barcode.ALL_FORMATS)
+                .build();
+        if(!detector.isOperational()){
+            //txtView.setText("Could not set up the detector!");
+            return;
+        }
     }
 
     TextureView.SurfaceTextureListener textureListener = new TextureView.SurfaceTextureListener() {
@@ -71,6 +89,27 @@ public class BarcodeActivity extends AppCompatActivity {
         }
         @Override
         public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+            if(barcodeFound || barCodeThreads > 2) {
+                System.out.println(barcodeFound + "   " + barCodeThreads);
+                return;
+            }
+
+            System.out.println("Running Scan!!");
+
+            new Thread(new Runnable() {
+                public void run() {
+                    barCodeThreads++;
+                    Frame frame = new Frame.Builder().setBitmap(cameraView.getBitmap()).build();
+                    SparseArray<Barcode> barcodes = detector.detect(frame);
+
+                    if(barcodes.size() > 0) {
+                        barcodeFound = true;
+                        barcode = barcodes.valueAt(0);
+                        System.out.println("BARCODE FOUND!!!" + barcode.rawValue);
+                    }
+                    barCodeThreads--;
+                }
+            }).start();
 
 
         }
@@ -146,6 +185,7 @@ public class BarcodeActivity extends AppCompatActivity {
             assert map != null;
             imageDimension = map.getOutputSizes(SurfaceTexture.class)[0];
             // Add permission for camera and let user grant the permission
+
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(BarcodeActivity.this, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
                 return;
@@ -165,16 +205,6 @@ public class BarcodeActivity extends AppCompatActivity {
             cameraCaptureSessions.setRepeatingRequest(captureRequestBuilder.build(), null, mBackgroundHandler);
         } catch (CameraAccessException e) {
             e.printStackTrace();
-        }
-    }
-    private void closeCamera() {
-        if (null != cameraDevice) {
-            cameraDevice.close();
-            cameraDevice = null;
-        }
-        if (null != imageReader) {
-            imageReader.close();
-            imageReader = null;
         }
     }
     @Override
