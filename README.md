@@ -1,3 +1,5 @@
+# BuildAR
+
 ## Inspiration
 As millennials, we are quite blessed to be born in an era where anything is possible with technology. Nowadays, it's quite normal for consumers to be buying groceries online, doctors to be consulting machine learning models for predictive analysis, and for people to be having surrealistic experiences unlocked with VR/AR technology. However, with change comes...well...more change. Many of us have been so obsessed with technology, that we have lost basic life skills needed for survival. For example, not knowing how to do laundry, navigate in a foreign country, flirt with girls, and most importantly, building furniture. Luckily, BuildAR knows all of this, and gives a beautiful AR solution to the issue at hand.
 
@@ -15,3 +17,6 @@ A definite takeaway that all members will leave HackPrinceton with is the lesson
 
 ## What's next for BuildAR
 Unfortunately, because of lack of execution and us debating for the entire first night, we did not have enough time to pivot into a planner app. What's next for BuildAR is PlannAR. PlannAR is the concept where room customizations along with the AR visualizations are combined together. Users will input the budget they have set for their new room, and PlannAR will delegate the set budget on the items the user requires. Stay tooned...for PlannAR.
+
+## Check us out on Devpost!
+https://devpost.com/software/aroom
