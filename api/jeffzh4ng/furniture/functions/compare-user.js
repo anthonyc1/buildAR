@@ -24,8 +24,8 @@ module.exports = (username, step, context, callback) => {
     if (currentMinute > oldMinute + 2) {
       sms.create({
         recipient: process.env.number,
-        body: "Hey! It seems like you're stuck on step" + step.toString()
-               + "Here are some additional resources to help: bitly[dot]com/98K8eH"
+        body: "Hey! It seems like you're stuck on step " + step.toString()
+               + ". Here are some additional resources to help: link"
       }, function(err) {
         if (err) return callback(err);
         return callback(null, "sent!");
