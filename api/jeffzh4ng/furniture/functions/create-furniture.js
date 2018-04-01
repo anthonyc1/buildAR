@@ -26,6 +26,6 @@ module.exports = (id, name, obj_link, img_link, texture_link, context, callback)
       return callback(err);
     }
 
-    return callback(null, furniture);
+    return callback(null, JSON.parse(JSON.stringify(furniture)));
   });
 };

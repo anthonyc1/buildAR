@@ -20,6 +20,6 @@ module.exports = (id, steps, context, callback) => {
       return callback(err);
     }
 
-    callback(null, step);
+    callback(null, JSON.parse(JSON.stringify(step)));
   });
 };
