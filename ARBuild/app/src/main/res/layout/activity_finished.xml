@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100sp"
+        android:orientation="horizontal">
+
+        <Space
+            android:layout_height="wrap_content"
+            android:layout_width="70dp" />
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/logo"
+            tools:layout_editor_absoluteX="194dp"
+            tools:layout_editor_absoluteY="239dp" />
+
+        <Space
+            android:layout_height="wrap_content"
+            android:layout_width="70dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="220sp"
+        android:layout_marginBottom="100sp"
+        android:layout_marginLeft="10sp"
+        android:layout_marginRight="10sp"
+        android:background="@drawable/layout_bg"
+        android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/calibration_string"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10sp"
+            android:layout_marginLeft="10sp"
+            android:fontFamily="@font/open_sans_bold"
+            android:text="@string/congrats_string"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/calibration_substring"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10sp"
+            android:fontFamily="@font/open_sans_light_italic"
+            android:text="@string/do_next_string"
+            android:textSize="24sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10sp"
+        android:orientation="horizontal">
+
+        <Space
+            android:layout_height="wrap_content"
+            android:layout_width="60dp" />
+
+        <ImageView
+            android:id="@+id/home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/home"
+            tools:layout_editor_absoluteX="194dp"
+            tools:layout_editor_absoluteY="239dp" />
+
+        <Space
+            android:layout_height="wrap_content"
+            android:layout_width="60dp" />
+
+        <ImageView
+            android:id="@+id/replay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/replay"
+            tools:layout_editor_absoluteX="194dp"
+            tools:layout_editor_absoluteY="239dp" />
+
+        <Space
+            android:layout_height="wrap_content"
+            android:layout_width="60dp" />
+    </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>
