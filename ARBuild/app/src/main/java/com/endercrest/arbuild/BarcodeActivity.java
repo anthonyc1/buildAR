@@ -99,11 +99,9 @@ public class BarcodeActivity extends AppCompatActivity {
                     SparseArray<Barcode> barcodes = detector.detect(frame);
 
                     if(barcodes.size() > 0 && !loadingAR) {
-                        System.out.println("Loading AR");
                         loadingAR = true;
                         barcodeFound = true;
                         barcode = barcodes.valueAt(0);
-
 
                         Intent intent = new Intent(getBaseContext(), ARStepActivity.class);
                         intent.putExtra(BARCODE, barcode.rawValue);

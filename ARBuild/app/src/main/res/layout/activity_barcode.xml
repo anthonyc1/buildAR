@@ -40,7 +40,8 @@
                 android:layout_width="200sp"
                 android:layout_height="75sp"
                 android:layout_weight="1"
-                android:background="@drawable/border" />
+                android:background="@drawable/border"
+                android:fontFamily="@font/open_sans_bold" />
 
             <Space
                 android:layout_width="wrap_content"
