@@ -84,12 +84,12 @@ public class ARStepActivity extends ARActivity implements Step.OnFragmentInterac
 
         apiSteps = new ArrayList<>();
         try {
-            apiSteps.add(new APIStep("Lets get Started!", "Some BS Instructions", this.getAssets().open("models/table_step0.obj"), this.getAssets().open("models/wood.png")));
+            apiSteps.add(new APIStep("Let's get Started!", "Check to ensure that you have all the necessary items.", this.getAssets().open("models/table_step0.obj"), this.getAssets().open("models/wood.png")));
             apiSteps.add(new APIStep("Move table legs", "Move your table legs and place your tabletop facing down.", this.getAssets().open("models/table_step1.obj"), this.getAssets().open("models/wood.png")));
-            apiSteps.add(new APIStep("Place first leg", "Some BS Instructions", this.getAssets().open("models/table_step2.obj"), this.getAssets().open("models/wood.png")));
-            apiSteps.add(new APIStep("Place second leg", "Some BS Instructions", this.getAssets().open("models/table_step3.obj"), this.getAssets().open("models/wood.png")));
-            apiSteps.add(new APIStep("Place third leg", "Some BS Instructions", this.getAssets().open("models/table_step4.obj"), this.getAssets().open("models/wood.png")));
-            apiSteps.add(new APIStep("Place fourth leg", "Some BS Instructions", this.getAssets().open("models/table_step5.obj"), this.getAssets().open("models/wood.png")));
+            apiSteps.add(new APIStep("Place first leg", "Attach table leg of your favorite corner.", this.getAssets().open("models/table_step2.obj"), this.getAssets().open("models/wood.png")));
+            apiSteps.add(new APIStep("Place second leg", "Attach next table leg.", this.getAssets().open("models/table_step3.obj"), this.getAssets().open("models/wood.png")));
+            apiSteps.add(new APIStep("Place third leg", "Attach third table leg.", this.getAssets().open("models/table_step4.obj"), this.getAssets().open("models/wood.png")));
+            apiSteps.add(new APIStep("Place fourth leg", "Attach final table leg. ", this.getAssets().open("models/table_step5.obj"), this.getAssets().open("models/wood.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }

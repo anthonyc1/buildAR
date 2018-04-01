@@ -8,9 +8,10 @@ mongoose.connect(process.env.DB_URI);
 /**
 * COMPARES if user is AFK > 5 mins
 * @param {string} username account name of user
+* @param {number} step the step the user is currently on
 * @returns {any}
 */
-module.exports = (username, context, callback) => {
+module.exports = (username, step, context, callback) => {
   UserLog.findOne({ username: username }, (err, user) => {
     if (err) {
       return err;
@@ -22,14 +23,15 @@ module.exports = (username, context, callback) => {
 
     if (currentMinute > oldMinute + 2) {
       sms.create({
-        recipient: "13474797101", // (required)
-        body: "hello world" // (required)
+        recipient: process.env.number,
+        body: "Hey! It seems like you're stuck on step" + step.toString()
+               + "Here are some additional resources to help: bitly[dot]com/98K8eH"
       }, function(err) {
         if (err) return callback(err);
         return callback(null, "sent!");
       });
     } else {
-      return callback(null, "user still active, no sms sent");
+      return callback(null, "not sent");
     }
   });
 
