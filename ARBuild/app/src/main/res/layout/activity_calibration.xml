@@ -94,53 +94,34 @@
         </LinearLayout>
     </LinearLayout>
 
-        <LinearLayout
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="500sp"
+        android:background="@color/instruction_button"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/calibration_string"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100sp"
-            android:orientation="horizontal">
+            android:layout_marginLeft="20sp"
+            android:background="@color/instruction_button"
+            android:fontFamily="@font/open_sans_bold"
+            android:text="@string/calibrating_string"
+            android:textSize="42sp" />
 
-            <Space
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <Space
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-        </LinearLayout>
-
-    <!--<TextView-->
-    <!--android:id="@+id/textView"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_marginTop="100sp"-->
-    <!--android:text="@string/scan_barcode"-->
-    <!--android:textAlignment="center"-->
-    <!--android:textSize="40sp" />-->
-    <TextView
-        android:id="@+id/calibration_string"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="540sp"
-        android:layout_marginLeft="20sp"
-        android:textColor="white"
-        android:background="@color/instruction_button"
-        android:fontFamily="@font/open_sans_bold"
-        android:text="@string/calibrating_string"
-        android:textSize="42sp" />
-
-    <TextView
-        android:id="@+id/calibration_substring"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20sp"
-        android:layout_marginTop="590sp"
-        android:background="@color/instruction_button"
-        android:fontFamily="@font/open_sans_light_italic"
-        android:text="@string/calibrating_substring"
-        android:textColor="white"
-        android:textSize="24sp" />
-
+        <TextView
+            android:id="@+id/calibration_substring"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20sp"
+            android:background="@color/instruction_button"
+            android:fontFamily="@font/open_sans_light_italic"
+            android:text="@string/calibrating_substring"
+            android:textSize="24sp" />
+    </LinearLayout>
+</RelativeLayout>
 </RelativeLayout>

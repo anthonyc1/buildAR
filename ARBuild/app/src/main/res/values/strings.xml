@@ -5,4 +5,6 @@
     <string name="planner_string">Planner</string>
     <string name="calibrating_string">Calibrating...</string>
     <string name="calibrating_substring">Please move phone around</string>
+    <string name="congrats_string">Congrats, you\'re done!</string>
+    <string name="do_next_string">What would you like to do next?</string>
 </resources>
