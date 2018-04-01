@@ -18,12 +18,16 @@ import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.TextView;
 
+import com.endercrest.arbuild.common.api.APIStep;
 import com.endercrest.arbuild.common.data.ARObject;
 import com.endercrest.arbuild.common.data.MaterialProperties;
 import com.endercrest.arbuild.common.helpers.TapHelper;
 import com.google.ar.core.Anchor;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -37,6 +41,7 @@ public class ARStepActivity extends ARActivity implements Step.OnFragmentInterac
     CalibrateFragment calibrateFragment;
 
     TapHelper tapHelper;
+    List<APIStep> apiSteps;
 
     @Override
     protected int getContentView() {
@@ -51,7 +56,7 @@ public class ARStepActivity extends ARActivity implements Step.OnFragmentInterac
     @Override
     protected void tapEvent(Anchor anchor) {
         if(arUUID == null) {
-            ARObject arObject = new ARObject("shiny", anchor);
+            ARObject arObject = new ARObject("", anchor);
             arUUID = arObject.getUuid();
 
             placeObject(arObject);
@@ -73,12 +78,26 @@ public class ARStepActivity extends ARActivity implements Step.OnFragmentInterac
         super.onCreate(savedInstanceState);
         tapHelper = new TapHelper(/*context=*/ this);
 
-        mDemoCollectionPagerAdapter = new DemoCollectionPagerAdapter(getSupportFragmentManager());
+
+        apiSteps = new ArrayList<>();
+        try {
+            apiSteps.add(new APIStep("Lets get Started!", "Some BS Instructions", this.getAssets().open("models/table_complete.obj"), this.getAssets().open("models/wood.png")));
+            apiSteps.add(new APIStep("Move table legs", "Move your table legs and place your tabletop facing down.", this.getAssets().open("models/table_complete.obj"), this.getAssets().open("models/andy.png")));
+            apiSteps.add(new APIStep("Place first leg", "Some BS Instructions", this.getAssets().open("models/table_complete.obj"), this.getAssets().open("models/andy.png")));
+            apiSteps.add(new APIStep("Place second leg", "Some BS Instructions", this.getAssets().open("models/table_complete.obj"), this.getAssets().open("models/andy.png")));
+            apiSteps.add(new APIStep("Place third leg", "Some BS Instructions", this.getAssets().open("models/table_complete.obj"), this.getAssets().open("models/andy.png")));
+            apiSteps.add(new APIStep("Place fourth leg", "Some BS Instructions", this.getAssets().open("models/table_complete.obj"), this.getAssets().open("models/andy.png")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        mDemoCollectionPagerAdapter = new DemoCollectionPagerAdapter(getSupportFragmentManager(), apiSteps);
         mViewPager = findViewById(R.id.pager);
         calibrateFragment = (CalibrateFragment) getFragmentManager().findFragmentById(R.id.calibrate);
         if (!isCalibrating) {
             calibrateFragment.hide();
         }
+
 
 
         mViewPager.setAdapter(mDemoCollectionPagerAdapter);
@@ -93,18 +112,14 @@ public class ARStepActivity extends ARActivity implements Step.OnFragmentInterac
 
             @Override
             public void onPageSelected(int position) {
-                System.out.println(position);
+
+                System.out.println("Page Selected" + position);
 
                 if(arUUID == null) {
                     return;
                 }
 
-                long val = Math.round(Math.random());
-                if (val == 1) {
-                    ARStepActivity.this.updateModel(arUUID, "shiny");
-                } else {
-                    ARStepActivity.this.updateModel(arUUID, "idk");
-                }
+                ARStepActivity.this.updateModel(arUUID, "step" + position);
             }
 
             @Override
@@ -129,15 +144,31 @@ public class ARStepActivity extends ARActivity implements Step.OnFragmentInterac
         super.updateCalibrateStatus(calibrating);
         if(calibrating) {
             calibrateFragment.show();
-            mViewPager.setVisibility(View.INVISIBLE);
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    mViewPager.setVisibility(View.GONE);
+                }
+            });
+            //mViewPager.setVisibility(View.GONE);
         } else {
             calibrateFragment.hide();
-            mViewPager.setVisibility(View.VISIBLE);
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    mViewPager.setVisibility(View.VISIBLE);
+                }
+            });
         }
     }
 
     @Override
     protected void loadAssets() throws IOException {
+        for (int i = 0; i < apiSteps.size(); i++) {
+            APIStep step = apiSteps.get(i);
+
+            loadObject("step"+i, step.getObjStream(), step.getTextureStream(),
+                    new MaterialProperties(0.0f, 2.0f, 0.5f, 6.0f));
+        }
+
         loadObject("shiny", this.getAssets().open("models/table_complete.obj"), this.getAssets().open("models/andy.png"),
                 new MaterialProperties(0.0f, 2.0f, 0.5f, 6.0f));
         loadObject("idk", this.getAssets().open("models/andy.obj"), this.getAssets().open("models/andy.png"),
@@ -152,18 +183,23 @@ public class ARStepActivity extends ARActivity implements Step.OnFragmentInterac
     // Since this is an object collection, use a FragmentStatePagerAdapter,
 // and NOT a FragmentPagerAdapter.
     public class DemoCollectionPagerAdapter extends FragmentStatePagerAdapter {
-        public DemoCollectionPagerAdapter(FragmentManager fm) {
+        List<APIStep> steps;
+
+        DemoCollectionPagerAdapter(FragmentManager fm, List<APIStep> steps) {
             super(fm);
+            this.steps = steps;
         }
 
         @Override
         public android.support.v4.app.Fragment getItem(int i) {
-            return Step.newInstance("Testing", "Some description");
+            APIStep step = steps.get(i);
+
+            return Step.newInstance(step.getTitle(), step.getMsg());
         }
 
         @Override
         public int getCount() {
-            return 100;
+            return steps.size();
         }
 
         @Override
