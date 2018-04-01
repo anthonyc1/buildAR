@@ -1,26 +1,30 @@
 const mongoose = require('mongoose');
 
 const instructionSchema = mongoose.Schema({
-  msg: {
+  title: {
     type: String,
     required: true
   },
-  obj_link: {
+  data: {
     type: String,
     required: true
   },
-  img_link: {
+  objLink: {
     type: String,
     required: true
   },
-  texture_link: {
+  imgLink: {
+    type: String,
+    required: true
+  },
+  textureLink: {
     type: String,
     required: true
   }
 });
 
 const stepSchema = mongoose.Schema({
-  id: {
+  barcode: {
     type: Number,
     required: true
   },

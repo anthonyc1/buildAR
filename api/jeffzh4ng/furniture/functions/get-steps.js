@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Step = require('../models/step');
+const Step = require('../models/Step');
 
 mongoose.connect(process.env.DB_URI);
 
@@ -9,7 +9,7 @@ mongoose.connect(process.env.DB_URI);
 * @returns {object}
 */
 module.exports = (id, context, callback) => {
-  Step.findOne({ id: id }, (err, step) => {
+  Step.findOne({ barcode: id }, (err, step) => {
     if (err) {
       return callback(err);
     }

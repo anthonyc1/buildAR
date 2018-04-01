@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Step = require('../models/step');
+const Step = require('../models/Step');
 
 mongoose.connect(process.env.DB_URI);
 
@@ -11,7 +11,7 @@ mongoose.connect(process.env.DB_URI);
 */
 module.exports = (id, steps, context, callback) => {
   const step = new Step({
-    id: id,
+    barcode: id,
     steps: steps
   });
 
