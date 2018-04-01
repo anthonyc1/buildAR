@@ -1,5 +1,6 @@
 package com.endercrest.arbuild;
 
+import android.content.Intent;
 import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Bundle;
@@ -32,7 +33,7 @@ import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
-public class ARStepActivity extends ARActivity implements Step.OnFragmentInteractionListener {
+public class ARStepActivity extends ARActivity implements Step.OnFragmentInteractionListener, StepFinishFragment.OnFragmentInteractionListener {
 
     private UUID arUUID;
 
@@ -169,18 +170,25 @@ public class ARStepActivity extends ARActivity implements Step.OnFragmentInterac
             APIStep step = apiSteps.get(i);
 
             loadObject("step"+i, step.getObjStream(), step.getTextureStream(),
-                    new MaterialProperties(0.0f, 2.0f, 0.5f, 1.0f));
+                    new MaterialProperties(0.3f, 0.6f, 0.0f, 0.0f));
         }
-
-        loadObject("shiny", this.getAssets().open("models/table_complete.obj"), this.getAssets().open("models/andy.png"),
-                new MaterialProperties(0.0f, 2.0f, 0.5f, 6.0f));
-        loadObject("idk", this.getAssets().open("models/andy.obj"), this.getAssets().open("models/andy.png"),
-                    new MaterialProperties(0.9f, 0.6f, 0.0f, 0.0f));
     }
 
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public void onRepeatClick() {
+        Intent intent = new Intent(getBaseContext(), BarcodeActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onHomeClick() {
+        Intent intent = new Intent(getBaseContext(), WelcomeActivity.class);
+        startActivity(intent);
     }
 
     // Since this is an object collection, use a FragmentStatePagerAdapter,
@@ -195,6 +203,10 @@ public class ARStepActivity extends ARActivity implements Step.OnFragmentInterac
 
         @Override
         public android.support.v4.app.Fragment getItem(int i) {
+            if (i >= steps.size()) {
+               return StepFinishFragment.newInstance();
+            }
+
             APIStep step = steps.get(i);
 
             return Step.newInstance(step.getTitle(), step.getMsg());
@@ -202,7 +214,7 @@ public class ARStepActivity extends ARActivity implements Step.OnFragmentInterac
 
         @Override
         public int getCount() {
-            return steps.size();
+            return steps.size() + 1;
         }
 
         @Override
