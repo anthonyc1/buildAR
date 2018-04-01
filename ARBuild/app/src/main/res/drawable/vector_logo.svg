@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="268px" height="72px" viewBox="0 0 268 72" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.2 (51160) - http://www.bohemiancoding.com/sketch -->
+    <title>logo</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Welcome" transform="translate(-73.000000, -190.000000)">
+            <g id="logo" transform="translate(75.000000, 192.000000)">
+                <text id="BuildAR" font-family="OpenSans-Bold, Open Sans" font-size="48" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="12.3632813" y="69">BuildAR</tspan>
+                </text>
+                <path d="M4.84037136,52.5398586 C4.84037136,52.5398586 -41.441522,-37.9796531 152.219537,19.1934444 C281.32691,57.3088427 298.391222,70.4421115 203.412474,58.5932508" id="Path-2" stroke="#FFFFFF" stroke-width="3"></path>
+            </g>
+        </g>
+    </g>
+</svg>
