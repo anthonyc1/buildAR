@@ -3,4 +3,6 @@
     <string name="scan_barcode">Scan Barcode</string>
     <string name="instructions_text">Instructions</string>
     <string name="planner_string">Planner</string>
+    <string name="calibrating_string">Calibrating...</string>
+    <string name="calibrating_substring">Please move phone around</string>
 </resources>
