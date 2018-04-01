@@ -15,6 +15,7 @@
 package com.endercrest.arbuild.common.helpers;
 
 import android.content.Context;
+import android.graphics.RectF;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -46,22 +47,22 @@ public final class TapHelper implements OnTouchListener {
    */
   public TapHelper(Context context) {
       gestureDetector =
-        new GestureDetector(
-            context,
-            new GestureDetector.SimpleOnGestureListener() {
-              @Override
-              public boolean onSingleTapUp(MotionEvent e) {
-                // Queue tap if there is space. Tap is lost if queue is full.
-                queuedSingleTaps.offer(e);
-                return true;
-              }
+              new GestureDetector(
+                      context,
+                      new GestureDetector.SimpleOnGestureListener() {
+                          @Override
+                          public boolean onSingleTapUp(MotionEvent e) {
+                              // Queue tap if there is space. Tap is lost if queue is full.
+                              queuedSingleTaps.offer(e);
+                              return true;
+                          }
 
-              @Override
-              public boolean onDown(MotionEvent e) {
-                return true;
-              }
+                          @Override
+                          public boolean onDown(MotionEvent e) {
+                              return true;
+                          }
 
-              @Override
+              /*@Override
               public boolean onFling(MotionEvent start, MotionEvent end, float velocityX, float velocityY) {
                 //System.out.println(start.toString() + "     " + end.toString());
                 //System.out.println(velocityX + "     " + velocityY);
@@ -79,8 +80,8 @@ public final class TapHelper implements OnTouchListener {
                     System.out.println("Right");
                 }
                 return true;
-              }
-            });
+              }*/
+                      });
   }
 
   /**

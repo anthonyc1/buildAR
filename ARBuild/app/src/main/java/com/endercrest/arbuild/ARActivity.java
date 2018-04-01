@@ -4,10 +4,13 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.MovementMethod;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
+import com.endercrest.arbuild.common.data.ARObject;
+import com.endercrest.arbuild.common.data.MaterialProperties;
 import com.endercrest.arbuild.common.helpers.CameraPermissionHelper;
 import com.endercrest.arbuild.common.helpers.DisplayRotationHelper;
 import com.endercrest.arbuild.common.helpers.FullScreenHelper;
@@ -36,7 +39,11 @@ import com.google.ar.core.exceptions.UnavailableSdkTooOldException;
 import com.google.ar.core.exceptions.UnavailableUserDeclinedInstallationException;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InvalidObjectException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -59,6 +66,9 @@ public abstract class ARActivity extends AppCompatActivity implements GLSurfaceV
     private final PlaneRenderer planeRenderer = new PlaneRenderer();
     private final PointCloudRenderer pointCloudRenderer = new PointCloudRenderer();
 
+    private final HashMap<String, ObjectRenderer> objectMap = new HashMap<>();
+    private final HashMap<UUID, ARObject> placedObjects = new HashMap<>();
+
     // Temporary matrix allocated here to reduce number of allocations for each frame.
     private final float[] anchorMatrix = new float[16];
 
@@ -67,6 +77,9 @@ public abstract class ARActivity extends AppCompatActivity implements GLSurfaceV
 
     protected abstract int getContentView();
     protected abstract int getSurfaceViewId();
+
+    protected abstract void tapEvent(Anchor anchor);
+    protected abstract MotionEvent pollClick();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +106,36 @@ public abstract class ARActivity extends AppCompatActivity implements GLSurfaceV
         return TAG;
     }
 
+    protected void loadObject(String key, InputStream obj, InputStream diffuseTexture, MaterialProperties material) throws IOException {
+        ObjectRenderer newObj = new ObjectRenderer();
+
+        newObj.createOnGlThread(this, obj, diffuseTexture);
+        newObj.setMaterialProperties(material.getAmbient(), material.getDiffuse(), material.getSpecular(), material.getSpecularPower());
+
+        objectMap.put(key, newObj);
+    }
+
+    protected void unloadObject(String key) {
+        objectMap.remove(key);
+    }
+
+    protected void placeObject(ARObject obj) {
+        placedObjects.put(obj.getUuid(), obj);
+    }
+
+    protected void removeObject(UUID uuid) {
+        placedObjects.remove(uuid);
+    }
+
+    protected void updateModel(UUID uuid, String objectKey) {
+        ARObject obj = placedObjects.get(uuid);
+        if(obj == null) {
+            return;
+        }
+
+        obj.setObjectKey(objectKey);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -116,7 +159,7 @@ public abstract class ARActivity extends AppCompatActivity implements GLSurfaceV
                     return;
                 }
 
-                // Create the session.
+                // Create the session.x
                 session = new Session(/* context= */ this);
 
             } catch (UnavailableArcoreNotInstalledException
@@ -213,9 +256,15 @@ public abstract class ARActivity extends AppCompatActivity implements GLSurfaceV
             virtualObjectShadow.setBlendMode(ObjectRenderer.BlendMode.Shadow);
             virtualObjectShadow.setMaterialProperties(1.0f, 0.0f, 0.0f, 1.0f);
 
+            loadAssets();
+
         } catch (IOException e) {
             Log.e(getTag(), "Failed to read an asset file", e);
         }
+    }
+
+    protected void loadAssets() throws IOException {
+
     }
 
     @Override
@@ -249,6 +298,11 @@ public abstract class ARActivity extends AppCompatActivity implements GLSurfaceV
             // compared to frame rate.
 
             MotionEvent tap = tapHelper.poll();
+            //MotionEvent tap = pollClick();
+
+            if(tap != null)
+                System.out.println(tap.toString());
+
             if (tap != null && camera.getTrackingState() == TrackingState.TRACKING) {
                 for (HitResult hit : frame.hitTest(tap)) {
                     // Check if any plane was hit, and if it was hit inside the plane polygon
@@ -262,14 +316,16 @@ public abstract class ARActivity extends AppCompatActivity implements GLSurfaceV
                         // Cap the number of objects created. This avoids overloading both the
                         // rendering system and ARCore.
 
-                        if (anchors.size() >= 20) {
+                        /*if (anchors.size() >= 20) {
                             anchors.get(0).detach();
                             anchors.remove(0);
                         }
                         // Adding an Anchor tells ARCore that it should track this position in
                         // space. This anchor is created on the Plane to place the 3D model
                         // in the correct position relative both to the world and to the plane.
-                        anchors.add(hit.createAnchor());
+                        anchors.add(hit.createAnchor());*/
+
+                        tapEvent(hit.createAnchor());
                         break;
                     }
                 }
@@ -336,6 +392,25 @@ public abstract class ARActivity extends AppCompatActivity implements GLSurfaceV
                 virtualObjectShadow.updateModelMatrix(anchorMatrix, scaleFactor);
                 virtualObject.draw(viewmtx, projmtx, colorCorrectionRgba);
                 virtualObjectShadow.draw(viewmtx, projmtx, colorCorrectionRgba);
+            }
+
+            for (ARObject obj: placedObjects.values()) {
+                Anchor anchor = obj.getAnchor();
+                if (anchor.getTrackingState() != TrackingState.TRACKING) {
+                    continue;
+                }
+
+                // Get the current pose of an Anchor in world space. The Anchor pose is updated
+                // during calls to session.update() as ARCore refines its estimate of the world.
+                anchor.getPose().toMatrix(anchorMatrix, 0);
+
+                ObjectRenderer model = objectMap.get(obj.getObjectKey());
+                if(model == null) {
+                    throw new InvalidObjectException("ARObject object has not been loaded.");
+                }
+                // Update and draw the model and its shadow.
+                model.updateModelMatrix(anchorMatrix, scaleFactor);
+                model.draw(viewmtx, projmtx, colorCorrectionRgba);
             }
 
         } catch (Throwable t) {
