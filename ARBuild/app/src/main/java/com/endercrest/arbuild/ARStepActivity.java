@@ -1,6 +1,7 @@
 package com.endercrest.arbuild;
 
 import android.graphics.RectF;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -27,7 +28,7 @@ import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
-public class ARStepActivity extends ARActivity {
+public class ARStepActivity extends ARActivity implements Step.OnFragmentInteractionListener {
 
     private UUID arUUID;
 
@@ -74,6 +75,34 @@ public class ARStepActivity extends ARActivity {
         mDemoCollectionPagerAdapter = new DemoCollectionPagerAdapter(getSupportFragmentManager());
         mViewPager = findViewById(R.id.pager);
         mViewPager.setAdapter(mDemoCollectionPagerAdapter);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                System.out.println(position);
+
+                if(arUUID == null) {
+                    return;
+                }
+
+                long val = Math.round(Math.random());
+                if (val == 1) {
+                    ARStepActivity.this.updateModel(arUUID, "shiny");
+                } else {
+                    ARStepActivity.this.updateModel(arUUID, "idk");
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         //mViewPager.setOnTouchListener(tapHelper);
         mViewPager.setOnTouchListener(new View.OnTouchListener() {
@@ -82,16 +111,21 @@ public class ARStepActivity extends ARActivity {
                 System.out.println("Touch!");
                 return surfaceView.dispatchTouchEvent(event);
             }
-        });;
+        });
 
     }
 
     @Override
     protected void loadAssets() throws IOException {
-        loadObject("shiny", this.getAssets().open("models/andy.obj"), this.getAssets().open("models/andy.png"),
-                new MaterialProperties(0.1f, 0.2f, 0.4f, 0.4f));
+        loadObject("shiny", this.getAssets().open("models/table_complete.obj"), this.getAssets().open("models/andy.png"),
+                new MaterialProperties(0.0f, 2.0f, 0.5f, 6.0f));
         loadObject("idk", this.getAssets().open("models/andy.obj"), this.getAssets().open("models/andy.png"),
                     new MaterialProperties(0.9f, 0.6f, 0.0f, 0.0f));
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+        
     }
 
     // Since this is an object collection, use a FragmentStatePagerAdapter,
@@ -103,12 +137,7 @@ public class ARStepActivity extends ARActivity {
 
         @Override
         public Fragment getItem(int i) {
-            Fragment fragment = new DemoObjectFragment();
-            Bundle args = new Bundle();
-            // Our object is just an integer :-P
-            args.putInt(DemoObjectFragment.ARG_OBJECT, i + 1);
-            fragment.setArguments(args);
-            return fragment;
+            return Step.newInstance("Testing", "Some description");
         }
 
         @Override
@@ -119,23 +148,6 @@ public class ARStepActivity extends ARActivity {
         @Override
         public CharSequence getPageTitle(int position) {
             return "OBJECT " + (position + 1);
-        }
-    }
-
-    public static class DemoObjectFragment extends Fragment {
-        public static final String ARG_OBJECT = "object";
-
-        @Override
-        public View onCreateView(LayoutInflater inflater,
-                                 ViewGroup container, Bundle savedInstanceState) {
-            // The last two arguments ensure LayoutParams are inflated
-            // properly.
-            View rootView = inflater.inflate(
-                    R.layout.fragment_collection_object, container, false);
-            Bundle args = getArguments();
-            ((TextView) rootView.findViewById(android.R.id.text1)).setText(
-                    Integer.toString(args.getInt(ARG_OBJECT)));
-            return rootView;
         }
     }
 
