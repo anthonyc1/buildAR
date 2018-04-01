@@ -25,6 +25,8 @@ import android.util.Size;
 import android.util.SparseArray;
 import android.view.Surface;
 import android.view.TextureView;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.vision.Frame;
@@ -58,6 +60,16 @@ public class BarcodeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_barcode);
+
+        Button instructionsButton = findViewById(R.id.skip);
+        instructionsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getBaseContext(), ARStepActivity.class);
+                intent.putExtra(BARCODE, "0");
+                startActivity(intent);
+            }
+        });
 
         cameraView = findViewById(R.id.cameraView);
         assert cameraView != null;
