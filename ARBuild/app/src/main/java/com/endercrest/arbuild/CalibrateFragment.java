@@ -1,12 +1,12 @@
 package com.endercrest.arbuild;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 
 /**
@@ -16,6 +16,8 @@ import android.view.ViewGroup;
  */
 public class CalibrateFragment extends Fragment {
 
+    private RelativeLayout layout;
+
     public CalibrateFragment() {
         // Required empty public constructor
     }
@@ -24,12 +26,9 @@ public class CalibrateFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment CalibrateFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static CalibrateFragment newInstance(String param1, String param2) {
+    public static CalibrateFragment newInstance() {
         CalibrateFragment fragment = new CalibrateFragment();
         fragment.setArguments(new Bundle());
         return fragment;
@@ -44,7 +43,9 @@ public class CalibrateFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_calibrate, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_calibrate, container, false);
+        layout = rootView.findViewById(R.id.container);
+        return rootView;
     }
 
     @Override
@@ -55,5 +56,13 @@ public class CalibrateFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    public void show() {
+        layout.setVisibility(View.VISIBLE);
+    }
+
+    public void hide() {
+        layout.setVisibility(View.INVISIBLE);
     }
 }

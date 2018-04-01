@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frame"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ARStepActivity">
@@ -11,9 +12,15 @@
         android:layout_height="match_parent"
         android:layout_gravity="top" />
 
-    <android.support.v4.view.ViewPager
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible" />
+
+    <fragment
+        android:id="@+id/calibrate"
+        android:name="com.endercrest.arbuild.CalibrateFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

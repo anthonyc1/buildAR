@@ -4,7 +4,6 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.method.MovementMethod;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.Toast;
@@ -75,11 +74,16 @@ public abstract class ARActivity extends AppCompatActivity implements GLSurfaceV
     // Anchors created from taps used for object placing.
     private final ArrayList<Anchor> anchors = new ArrayList<>();
 
+    protected boolean isCalibrating = false;
+
     protected abstract int getContentView();
     protected abstract int getSurfaceViewId();
 
     protected abstract void tapEvent(Anchor anchor);
     protected abstract MotionEvent pollClick();
+    protected void updateCalibrateStatus(boolean calibrating) {
+        isCalibrating = calibrating;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -202,7 +206,8 @@ public abstract class ARActivity extends AppCompatActivity implements GLSurfaceV
         surfaceView.onResume();
         displayRotationHelper.onResume();
 
-        messageSnackbarHelper.showMessage(this, "Searching for surfaces...");
+        updateCalibrateStatus(true);
+        //messageSnackbarHelper.showMessage(this, "Searching for surfaces...");
     }
 
     @Override
@@ -363,11 +368,13 @@ public abstract class ARActivity extends AppCompatActivity implements GLSurfaceV
             pointCloud.release();
 
             // Check if we detected at least one plane. If so, hide the loading message.
-            if (messageSnackbarHelper.isShowing()) {
+            if (/*messageSnackbarHelper.isShowing()*/isCalibrating) {
                 for (Plane plane : session.getAllTrackables(Plane.class)) {
                     if (plane.getType() == Plane.Type.HORIZONTAL_UPWARD_FACING
                             && plane.getTrackingState() == TrackingState.TRACKING) {
-                        messageSnackbarHelper.hide(this);
+                        updateCalibrateStatus(false);
+
+                        //messageSnackbarHelper.hide(this);
                         break;
                     }
                 }

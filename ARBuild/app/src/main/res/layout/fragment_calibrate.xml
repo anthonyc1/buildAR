@@ -1,14 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CalibrateFragment">
+    tools:context=".CalibrationActivity">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-</FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <Space
+                android:layout_width="140dp"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:id="@+id/up_arrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/up_arrow"
+                tools:layout_editor_absoluteX="194dp"
+                tools:layout_editor_absoluteY="239dp" />
+
+            <Space
+                android:layout_width="140dp"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="100dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/left_arrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/left_arrow"
+                tools:layout_editor_absoluteX="194dp"
+                tools:layout_editor_absoluteY="239dp" />
+
+            <Space
+                android:layout_width="150dp"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:id="@+id/right_arrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/right_arrow"
+                tools:layout_editor_absoluteX="194dp"
+                tools:layout_editor_absoluteY="239dp" />
+
+        </LinearLayout>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="100dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <Space
+                android:layout_width="140dp"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:id="@+id/down_arrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/down_arrow"
+                tools:layout_editor_absoluteX="194dp"
+                tools:layout_editor_absoluteY="239dp" />
+
+            <Space
+                android:layout_width="140dp"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="500sp"
+            android:background="@color/instruction_button"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/calibration_string"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20sp"
+                android:background="@color/instruction_button"
+                android:fontFamily="@font/open_sans_bold"
+                android:text="@string/calibrating_string"
+                android:textSize="42sp" />
+
+            <TextView
+                android:id="@+id/calibration_substring"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20sp"
+                android:background="@color/instruction_button"
+                android:fontFamily="@font/open_sans_light_italic"
+                android:text="@string/calibrating_substring"
+                android:textSize="24sp" />
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

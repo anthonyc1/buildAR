@@ -3,7 +3,7 @@ package com.endercrest.arbuild;
 import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.VelocityTrackerCompat;
@@ -34,6 +34,7 @@ public class ARStepActivity extends ARActivity implements Step.OnFragmentInterac
 
     DemoCollectionPagerAdapter mDemoCollectionPagerAdapter;
     ViewPager mViewPager;
+    CalibrateFragment calibrateFragment;
 
     TapHelper tapHelper;
 
@@ -74,7 +75,15 @@ public class ARStepActivity extends ARActivity implements Step.OnFragmentInterac
 
         mDemoCollectionPagerAdapter = new DemoCollectionPagerAdapter(getSupportFragmentManager());
         mViewPager = findViewById(R.id.pager);
+        calibrateFragment = (CalibrateFragment) getFragmentManager().findFragmentById(R.id.calibrate);
+        if (!isCalibrating) {
+            calibrateFragment.hide();
+        }
+
+
         mViewPager.setAdapter(mDemoCollectionPagerAdapter);
+
+
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
@@ -116,6 +125,18 @@ public class ARStepActivity extends ARActivity implements Step.OnFragmentInterac
     }
 
     @Override
+    protected void updateCalibrateStatus(boolean calibrating) {
+        super.updateCalibrateStatus(calibrating);
+        if(calibrating) {
+            calibrateFragment.show();
+            mViewPager.setVisibility(View.INVISIBLE);
+        } else {
+            calibrateFragment.hide();
+            mViewPager.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
     protected void loadAssets() throws IOException {
         loadObject("shiny", this.getAssets().open("models/table_complete.obj"), this.getAssets().open("models/andy.png"),
                 new MaterialProperties(0.0f, 2.0f, 0.5f, 6.0f));
@@ -125,7 +146,7 @@ public class ARStepActivity extends ARActivity implements Step.OnFragmentInterac
 
     @Override
     public void onFragmentInteraction(Uri uri) {
-        
+
     }
 
     // Since this is an object collection, use a FragmentStatePagerAdapter,
@@ -136,7 +157,7 @@ public class ARStepActivity extends ARActivity implements Step.OnFragmentInterac
         }
 
         @Override
-        public Fragment getItem(int i) {
+        public android.support.v4.app.Fragment getItem(int i) {
             return Step.newInstance("Testing", "Some description");
         }
 
