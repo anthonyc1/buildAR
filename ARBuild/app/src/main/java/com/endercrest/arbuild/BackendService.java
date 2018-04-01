@@ -6,7 +6,11 @@ import android.widget.TextView;
 
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
@@ -14,7 +18,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.Callback;
 
-public class Test  extends AppCompatActivity {
+public class BackendService extends AppCompatActivity {
 
     String barcode = "0";
     String getreq_url = "https://jeffzh4ng.lib.id/furniture@dev/get-furniture/?id=";
@@ -32,7 +36,7 @@ public class Test  extends AppCompatActivity {
         myText = (TextView) findViewById(R.id.myText);
 
         //getRequest(getreq_url, barcode);
-        getRequest(file_url, obj_ext);
+        getRequest(file_url, png_ext);
     }
 
     // Call this method
@@ -81,7 +85,7 @@ public class Test  extends AppCompatActivity {
             texture_link = jsonObject.getString("texture_link");
 
             // Output to activity
-            Test.this.runOnUiThread(new Runnable() {
+            BackendService.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     myText.setText(name);
@@ -96,8 +100,13 @@ public class Test  extends AppCompatActivity {
         // Convert obtained text to JSON object
         try {
             final String myResponse = response.body().string();
+
+            byte[] b = myResponse.getBytes();
+            InputStream is = new ByteArrayInputStream(b);
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+
             // Output to activity
-            Test.this.runOnUiThread(new Runnable() {
+            BackendService.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     myText.setText(myResponse);
