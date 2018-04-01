@@ -43,6 +43,8 @@ public class ARStepActivity extends ARActivity implements Step.OnFragmentInterac
     TapHelper tapHelper;
     List<APIStep> apiSteps;
 
+    int step = 0;
+
     @Override
     protected int getContentView() {
         return R.layout.activity_arstep;
@@ -56,7 +58,7 @@ public class ARStepActivity extends ARActivity implements Step.OnFragmentInterac
     @Override
     protected void tapEvent(Anchor anchor) {
         if(arUUID == null) {
-            ARObject arObject = new ARObject("", anchor);
+            ARObject arObject = new ARObject("step"+step, anchor);
             arUUID = arObject.getUuid();
 
             placeObject(arObject);
@@ -81,12 +83,12 @@ public class ARStepActivity extends ARActivity implements Step.OnFragmentInterac
 
         apiSteps = new ArrayList<>();
         try {
-            apiSteps.add(new APIStep("Lets get Started!", "Some BS Instructions", this.getAssets().open("models/table_complete.obj"), this.getAssets().open("models/wood.png")));
-            apiSteps.add(new APIStep("Move table legs", "Move your table legs and place your tabletop facing down.", this.getAssets().open("models/table_complete.obj"), this.getAssets().open("models/andy.png")));
-            apiSteps.add(new APIStep("Place first leg", "Some BS Instructions", this.getAssets().open("models/table_complete.obj"), this.getAssets().open("models/andy.png")));
-            apiSteps.add(new APIStep("Place second leg", "Some BS Instructions", this.getAssets().open("models/table_complete.obj"), this.getAssets().open("models/andy.png")));
-            apiSteps.add(new APIStep("Place third leg", "Some BS Instructions", this.getAssets().open("models/table_complete.obj"), this.getAssets().open("models/andy.png")));
-            apiSteps.add(new APIStep("Place fourth leg", "Some BS Instructions", this.getAssets().open("models/table_complete.obj"), this.getAssets().open("models/andy.png")));
+            apiSteps.add(new APIStep("Lets get Started!", "Some BS Instructions", this.getAssets().open("models/table_step0.obj"), this.getAssets().open("models/wood.png")));
+            apiSteps.add(new APIStep("Move table legs", "Move your table legs and place your tabletop facing down.", this.getAssets().open("models/table_step1.obj"), this.getAssets().open("models/wood.png")));
+            apiSteps.add(new APIStep("Place first leg", "Some BS Instructions", this.getAssets().open("models/table_step2.obj"), this.getAssets().open("models/wood.png")));
+            apiSteps.add(new APIStep("Place second leg", "Some BS Instructions", this.getAssets().open("models/table_step3.obj"), this.getAssets().open("models/wood.png")));
+            apiSteps.add(new APIStep("Place third leg", "Some BS Instructions", this.getAssets().open("models/table_step4.obj"), this.getAssets().open("models/wood.png")));
+            apiSteps.add(new APIStep("Place fourth leg", "Some BS Instructions", this.getAssets().open("models/table_step5.obj"), this.getAssets().open("models/wood.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -119,6 +121,7 @@ public class ARStepActivity extends ARActivity implements Step.OnFragmentInterac
                     return;
                 }
 
+                step = position;
                 ARStepActivity.this.updateModel(arUUID, "step" + position);
             }
 
@@ -166,7 +169,7 @@ public class ARStepActivity extends ARActivity implements Step.OnFragmentInterac
             APIStep step = apiSteps.get(i);
 
             loadObject("step"+i, step.getObjStream(), step.getTextureStream(),
-                    new MaterialProperties(0.0f, 2.0f, 0.5f, 6.0f));
+                    new MaterialProperties(0.0f, 2.0f, 0.5f, 1.0f));
         }
 
         loadObject("shiny", this.getAssets().open("models/table_complete.obj"), this.getAssets().open("models/andy.png"),
