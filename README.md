@@ -16,7 +16,7 @@ One of the prominent issues our group had to face in the beginning was practical
 A definite takeaway that all members will leave HackPrinceton with is the lesson of balancing plan of execution, and the execution itself. The problem we faced at HackPrinceton is the very reason why Agile is very popular amongst tech companies today. Create a presentable, MVP that works, and continuing on improvement and pivoting throughout the journey of the product.
 
 ## What's next for BuildAR
-Unfortunately, because of lack of execution and us debating for the entire first night, we did not have enough time to pivot into a planner app. What's next for BuildAR is PlannAR. PlannAR is the concept where room customizations along with the AR visualizations are combined together. Users will input the budget they have set for their new room, and PlannAR will delegate the set budget on the items the user requires. Stay tooned...for PlannAR.
+What's next for BuildAR is PlannAR. PlannAR is the concept where room customizations along with the AR visualizations are combined together. Users will input the budget they have set for their new room, and PlannAR will delegate the set budget on the items the user requires. Because of the time constraints of the hackathon and lost time from debating over project ideas for the first night, we did not have enough time to pivot into said planner app. But stay tooned...for PlannAR!
 
 ## Check us out on Devpost!
 https://devpost.com/software/aroom
